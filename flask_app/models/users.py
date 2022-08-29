@@ -21,8 +21,15 @@ class User:
 
     @classmethod
     def add_friendship(cls, data):
+        test_query = "SELECT EXISTS( SELECT 1 FROM friendships WHERE (user_id = %(first_user)s AND friend_id = %(second_user)s) OR (user_id = %(second_user)s AND friend_id = %(first_user)s)) as exist;"
         query = "INSERT INTO friendships (user_id, friend_id) VALUES (%(first_user)s, %(second_user)s)"
-        connectToMySQL('friendships_schema').query_db(query, data)
+
+        double_check = connectToMySQL('friendships_schema').query_db(test_query,data)
+        if double_check[0]['exist'] == 0:
+            print('Creating Entry.')
+            connectToMySQL('friendships_schema').query_db(query, data)
+        else:
+            print('Entry already exists.')
 
     @classmethod
     def get_all(cls):
