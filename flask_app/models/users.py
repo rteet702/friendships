@@ -14,6 +14,11 @@ class User:
     @classmethod
     def get_friendships(cls):
         query = """SELECT CONCAT_WS(' ', users.first_name, users.last_name) as User,CONCAT_WS(' ', users2.first_name, users2.last_name) as Friend FROM users
-                JOIN friendships ON user_id = users.id or friend_id = users.id
-                JOIN users as users2 ON (user_id = users2.id and users2.id <> users.id) or (friend_id = users2.id and users2.id <> users.id);"""
+                LEFT JOIN friendships ON user_id = users.id or friend_id = users.id
+                LEFT JOIN users as users2 ON (user_id = users2.id and users2.id <> users.id) or (friend_id = users2.id and users2.id <> users.id);"""
         return connectToMySQL('friendships_schema').query_db(query)
+
+    @classmethod
+    def add_user(cls, data):
+        query = "INSERT INTO users (first_name, last_name) VALUES (%(first_name)s, %(last_name)s);"
+        connectToMySQL('friendships_schema').query_db(query, data)

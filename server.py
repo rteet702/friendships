@@ -1,5 +1,5 @@
 from flask_app import app
-from flask_app.controllers import friendships
+from flask_app.controllers import friendships, users
 
 
 if __name__ == '__main__':
