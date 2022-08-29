@@ -11,6 +11,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
+                <!-- table to display all current friendships -->
                 <table class="table table-striped caption-top w-75">
                     <caption><h1>Friendships</h1></caption>
                     <thead>
@@ -31,6 +32,7 @@
             </div>
             <div class="col">
                 <div class="row">
+                    <!-- form for creating new users  -->
                     <h2 class="mt-3">Create a User</h2>
                     <form action="/users/create" method="post">
                         <label for="first_name" class="form-label mt-3">First Name:</label>
@@ -41,7 +43,25 @@
                     </form>
                 </div>
                 <div class="row">
-                    <form action="/friendships/create" method="post"></form>
+                    <h2 class="mt-3">Create a new Friendship</h2>
+                    <!-- form for creating new friendships -->
+                    <form action="/friendships/create" method="post">
+                        <label for="first_user" class="form-label mt-3">First User:</label>
+                        <select class="form-select mt-3 text-dark" name="first_user" id ="first_user">
+                            <option value="" disabled selected>Select Option</option>
+                            {% for user in users: %}
+                            <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="second_user" class="form-label mt-3">Second User:</label>
+                        <select class="form-select mt-3" name="second_user" id ="second_user">
+                            <option value="" disabled selected>Select Option</option>
+                            {% for user in users: %}
+                            <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" value="Create" class="btn btn-primary mt-3">
+                    </form>
                 </div>
             </div>
         </div>

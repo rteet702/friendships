@@ -3,13 +3,14 @@ from flask_app.config.mysqlconnection import connectToMySQL
 
 class User:
     def __init__(self, data):
+        self.id = data['id']
         self.first_name = data['first_name']
         self.last_name = data['last_name']
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
 
     def __repr__(self):
-        return f'<User: {self.first_name}> Object'
+        return f'<User: {self.first_name}> Object ID: {self.id}'
 
     @classmethod
     def get_friendships(cls):
@@ -17,6 +18,20 @@ class User:
                 LEFT JOIN friendships ON user_id = users.id or friend_id = users.id
                 LEFT JOIN users as users2 ON (user_id = users2.id and users2.id <> users.id) or (friend_id = users2.id and users2.id <> users.id);"""
         return connectToMySQL('friendships_schema').query_db(query)
+
+    @classmethod
+    def add_friendship(cls, data):
+        query = "INSERT INTO friendships (user_id, friend_id) VALUES (%(first_user)s, %(second_user)s)"
+        connectToMySQL('friendships_schema').query_db(query, data)
+
+    @classmethod
+    def get_all(cls):
+        query = "SELECT * FROM users;"
+        results = connectToMySQL('friendships_schema').query_db(query)
+        users = []
+        for user in results:
+            users.append(cls(user))
+        return users
 
     @classmethod
     def add_user(cls, data):
